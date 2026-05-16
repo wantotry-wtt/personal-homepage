@@ -13,7 +13,7 @@ RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
   # 关键修复 2：放弃容易出错的 corepack，直接用 npm 全局安装 pnpm
-  elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i; \
+  elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i --ignore-scripts; \
   else echo "Lockfile not found." && npm install; \
   fi
 
