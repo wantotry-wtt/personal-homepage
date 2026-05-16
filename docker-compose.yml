@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: digital-garden
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      # 将宿主机的 ./data 挂载到容器的 /app/data 目录
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+      # 极简后台登录账号密码 (需在部署时修改)
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - JWT_SECRET=super_secret_jwt_key_please_change_me
