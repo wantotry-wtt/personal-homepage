@@ -7,11 +7,13 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+# 关键修复 1：把 pnpm-workspace.yaml* 也拷贝进去
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i; \
+  # 关键修复 2：放弃容易出错的 corepack，直接用 npm 全局安装 pnpm
+  elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i; \
   else echo "Lockfile not found." && npm install; \
   fi
 
